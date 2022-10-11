@@ -1,8 +1,9 @@
 package ru.practicum.shareit.user.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exception.NotUniqueEmailException;
+import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.user.UserValid;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
@@ -12,59 +13,54 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final UserRepository userRepository;
 
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final UserRepository userRepository;
+    private final UserValid userValid;
 
     @Override
     public UserDto createUser(UserDto userDto) {
-        checkEmail(userDto);
-        User user = userRepository.add(UserMapper.toUser(userDto));
-        return UserMapper.toUserDto(user);
+        userValid.validation(userDto);
+        User user = UserMapper.toUser(userDto);
+        return UserMapper.toUserDto(userRepository.save(user));
     }
 
     @Override
-    public UserDto updateUser(long userId, UserDto userDto) {
-        User user = userRepository.getUserById(userId);
-        if (userDto.getName() != null) {
-            user.setName(userDto.getName());
-        }
-        if (userDto.getEmail() != null) {
-            checkEmail(userDto);
-            user.setEmail(userDto.getEmail());
-        }
-        userRepository.updateUser(user);
-        return UserMapper.toUserDto(user);
+    public UserDto updateUser(long id, UserDto userDto) {
+        User updateUser = userRepository.findById(id).orElseThrow(() ->
+                new NotFoundException("NFE"));
+        fillUser(updateUser, userDto);
+        return UserMapper.toUserDto(userRepository.save(updateUser));
     }
 
     @Override
     public void deleteUser(long id) {
-        userRepository.deleteUser(id);
+        userRepository.deleteById(id);
     }
 
     @Override
     public UserDto getUserById(long id) {
-        return UserMapper.toUserDto(userRepository.getUserById(id));
+        User user = userRepository.findById(id).orElseThrow(() ->
+                new NotFoundException("NFE"));
+        return UserMapper.toUserDto(user);
     }
 
     @Override
     public List<UserDto> getAllUsers() {
-        List<UserDto> collect = userRepository.getAllUser()
-                .stream()
+        return userRepository.findAll().stream()
                 .map(UserMapper::toUserDto)
                 .collect(Collectors.toList());
-        return collect;
     }
 
-    public void checkEmail(UserDto userDto) {
-        if (userRepository.getAllUser()
-                .stream()
-                .anyMatch(user -> user.getEmail().equals(userDto.getEmail()))) {
-            throw new NotUniqueEmailException("email не уникальный");
+    private void fillUser(User user, UserDto userDto) {
+        String name = userDto.getName();
+        if (name != null) {
+            user.setName(name);
+        }
+        String email = userDto.getEmail();
+        if (email != null) {
+            user.setEmail(email);
         }
     }
 }

@@ -1,25 +1,46 @@
 package ru.practicum.shareit.item.dto;
 
-import lombok.experimental.UtilityClass;
+import org.springframework.stereotype.Component;
+import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 
-@UtilityClass
+import java.util.List;
+
+@Component
 public class ItemMapper {
-    public static ItemDto itemDto(Item item) {
-        return ItemDto.builder()
-                .id(item.getId())
-                .name(item.getName())
-                .description(item.getDescription())
-                .available(item.getAvailable())
-                .build();
+
+    public static ItemDto toDto(Item item) {
+        ItemDto itemDto = new ItemDto();
+        itemDto.setId(item.getId());
+        itemDto.setName(item.getName());
+        itemDto.setAvailable(item.getAvailable());
+        itemDto.setDescription(item.getDescription());
+
+        return itemDto;
+    }
+
+    public static ItemInfoDto toItemInfoDto(Item item,
+                                            Booking lastBooking,
+                                            Booking nextBooking,
+                                            List<Comment> comments) {
+        return new ItemInfoDto(
+                item.getId(),
+                item.getName(),
+                item.getDescription(),
+                item.getAvailable(),
+                ItemInfoDto.BookingInfoDto.create(lastBooking),
+                ItemInfoDto.BookingInfoDto.create(nextBooking),
+                CommentMapper.mapToCommentInfoDto(comments)
+        );
     }
 
     public static Item toItem(ItemDto itemDto) {
-        return Item.builder()
-                .id(itemDto.getId())
-                .name(itemDto.getName())
-                .description(itemDto.getDescription())
-                .available(itemDto.getAvailable())
-                .build();
+        Item item = new Item();
+        item.setName(itemDto.getName());
+        item.setAvailable(itemDto.getAvailable());
+        item.setDescription(itemDto.getDescription());
+
+        return item;
     }
 }
