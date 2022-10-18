@@ -10,9 +10,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 public class ErrorHandler {
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorHandler handler(final  NotFoundException e) {
-        log.info("404 {}", e.getMessage());
-        return new ErrorHandler();
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleValidationException(final ValidationException e) {
+        return new ErrorResponse(e.getMessage());
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleObjectNotFoundException(final ObjectNotFoundException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
 }
