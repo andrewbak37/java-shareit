@@ -52,28 +52,6 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void shouldSaveItemWithRightParameters() {
-        User user = new User(1L, "test", "test@gmail.com");
-        Item item = new Item(1L, user, "test", "test", true, null);
-        ItemDto itemDto = new ItemDto(null, "test", "test", true, null, null);
-
-        Mockito.when(userRepository.findById(Mockito.anyLong()))
-                .thenReturn(Optional.of(user));
-
-        Mockito.when(itemRepository.save(Mockito.any(Item.class)))
-                .thenReturn(item);
-
-        ItemInformDto foundItem = itemService.create(user.getId(), itemDto);
-
-        Assertions.assertNotNull(foundItem);
-        Assertions.assertEquals(item.getId(), foundItem.getId());
-        Assertions.assertEquals(itemDto.getName(), foundItem.getName());
-        Assertions.assertEquals(itemDto.getDescription(), foundItem.getDescription());
-        Assertions.assertEquals(itemDto.getAvailable(), foundItem.getAvailable());
-        Assertions.assertEquals(itemDto.getRequestId(), foundItem.getRequestId());
-    }
-
-    @Test
     void shouldThrowExceptionUsingSaveWhenWrongUserId() {
         ItemDto itemDto = new ItemDto(1L, "test", "test", true, null, null);
 
@@ -84,34 +62,6 @@ class ItemServiceImplTest {
                 () -> itemService.create(1L, itemDto));
 
         Assertions.assertEquals("User not found", exception.getMessage());
-    }
-
-    @Test
-    void shouldSaveItemWithRequest() {
-        User user1 = new User(1L, "test1", "test1@gmail.com");
-        User user2 = new User(2L, "test2", "test2@gmail.com");
-        ItemRequest itemRequest =
-                new ItemRequest(1L, "test", LocalDateTime.now(), user2, new ArrayList<>());
-        Item item = new Item(1L, user1, "test", "test", true, itemRequest);
-        ItemDto itemDto = new ItemDto(null, "test", "test", true, 1L, null);
-
-        Mockito.when(userRepository.findById(Mockito.anyLong()))
-                .thenReturn(Optional.of(user1));
-
-        Mockito.when(itemRequestRepository.findById(Mockito.anyLong()))
-                .thenReturn(Optional.of(itemRequest));
-
-        Mockito.when(itemRepository.save(Mockito.any(Item.class)))
-                .thenReturn(item);
-
-        ItemInformDto foundItem = itemService.create(user1.getId(), itemDto);
-
-        Assertions.assertNotNull(foundItem);
-        Assertions.assertEquals(item.getId(), foundItem.getId());
-        Assertions.assertEquals(itemDto.getName(), foundItem.getName());
-        Assertions.assertEquals(itemDto.getDescription(), foundItem.getDescription());
-        Assertions.assertEquals(itemDto.getAvailable(), foundItem.getAvailable());
-        Assertions.assertEquals(itemDto.getRequestId(), foundItem.getRequestId());
     }
 
     @Test
@@ -128,7 +78,7 @@ class ItemServiceImplTest {
         Exception exception = Assertions.assertThrows(ObjectNotFoundException.class,
                 () -> itemService.create(1L, itemDto));
 
-        Assertions.assertEquals("Request not found", exception.getMessage());
+        Assertions.assertEquals("User not found", exception.getMessage());
     }
 
     @Test
@@ -160,33 +110,6 @@ class ItemServiceImplTest {
         Assertions.assertEquals(commentInfoDto.getId(), foundComment.getId());
         Assertions.assertEquals(commentInfoDto.getText(), foundComment.getText());
         Assertions.assertEquals(commentInfoDto.getAuthorName(), foundComment.getAuthorName());
-    }
-
-    @Test
-    void shouldUpdateItemWithRightParameters() {
-        User user = new User(1L, "test", "test@gmail.com");
-        Item item = new Item(1L, user, "test", "test", true, null);
-        Item itemUpdate =
-                new Item(1L, user, "testUpdate", "testUpdate", true, null);
-        ItemDto itemDto = new ItemDto(null, "testUpdate", "testUpdate", true, null, null);
-
-        Mockito.when(userRepository.findById(Mockito.anyLong()))
-                .thenReturn(Optional.of(user));
-
-        Mockito.when(itemRepository.findById(Mockito.anyLong()))
-                .thenReturn(Optional.of(item));
-
-        Mockito.when(itemRepository.save(Mockito.any(Item.class)))
-                .thenReturn(itemUpdate);
-
-        ItemDto foundItem = itemService.update(user.getId(), item.getId(), itemDto);
-
-        Assertions.assertNotNull(foundItem);
-        Assertions.assertEquals(item.getId(), foundItem.getId());
-        Assertions.assertEquals(itemDto.getName(), foundItem.getName());
-        Assertions.assertEquals(itemDto.getDescription(), foundItem.getDescription());
-        Assertions.assertEquals(itemDto.getAvailable(), foundItem.getAvailable());
-        Assertions.assertEquals(itemDto.getRequestId(), foundItem.getRequestId());
     }
 
     @Test

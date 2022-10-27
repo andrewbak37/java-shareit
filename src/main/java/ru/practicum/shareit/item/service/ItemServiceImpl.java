@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.BadRequestException;
-import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ObjectNotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.dto.*;
@@ -117,13 +116,15 @@ public class ItemServiceImpl implements ItemService {
 
     private void checkUserExists(Long userId) {
         if (!userRepository.existsById(userId)) {
-            throw new NotFoundException("NFE");
+            throw new ObjectNotFoundException("User not found");
+            //  throw new NotFoundException("NFE");
         }
     }
 
     private void checkItemOwner(Long ownerId, Long userId) {
         if (!ownerId.equals(userId)) {
-            throw new NotFoundException("NFE");
+            throw new ObjectNotFoundException("Request not found");
+            // throw new NotFoundException("NFE");
         }
     }
 

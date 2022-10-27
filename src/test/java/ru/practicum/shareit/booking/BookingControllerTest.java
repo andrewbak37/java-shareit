@@ -63,7 +63,7 @@ class BookingControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.itemId", Matchers.is(bookingDto.getItemId()), Long.class));
+                .andExpect(jsonPath("$.item.id", Matchers.is(bookingDto.getItemId()), Long.class));
     }
 
     @Test
