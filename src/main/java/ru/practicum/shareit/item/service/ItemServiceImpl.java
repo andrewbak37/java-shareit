@@ -117,14 +117,12 @@ public class ItemServiceImpl implements ItemService {
     private void checkUserExists(Long userId) {
         if (!userRepository.existsById(userId)) {
             throw new ObjectNotFoundException("User not found");
-            //  throw new NotFoundException("NFE");
         }
     }
 
     private void checkItemOwner(Long ownerId, Long userId) {
         if (!ownerId.equals(userId)) {
             throw new ObjectNotFoundException("Request not found");
-            // throw new NotFoundException("NFE");
         }
     }
 
