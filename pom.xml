@@ -235,7 +235,7 @@
 			</reporting>
 		</profile>
 		<profile>
-			<id>coverage</id>
+			<id>default-jacoco-check</id>
 			<build>
 				<plugins>
 					<plugin>
