@@ -1,9 +1,10 @@
 package ru.practicum.shareit.user.model;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
 
@@ -13,8 +14,9 @@ import javax.persistence.*;
 
 @Setter
 @Getter
-@Slf4j
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "users")
 
 public class User {
@@ -25,4 +27,12 @@ public class User {
     private String name;
     private String email;
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }
