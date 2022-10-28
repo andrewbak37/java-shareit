@@ -2,8 +2,7 @@ package ru.practicum.shareit.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.user.UserValid;
+import ru.practicum.shareit.exception.ObjectNotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
@@ -17,21 +16,19 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final UserValid userValid;
 
     @Override
     public UserDto createUser(UserDto userDto) {
-        userValid.validation(userDto);
         User user = UserMapper.toUser(userDto);
         return UserMapper.toUserDto(userRepository.save(user));
     }
 
     @Override
     public UserDto updateUser(long id, UserDto userDto) {
-        User updateUser = userRepository.findById(id).orElseThrow(() ->
-                new NotFoundException("NFE"));
-        fillUser(updateUser, userDto);
-        return UserMapper.toUserDto(userRepository.save(updateUser));
+        User updatedUser = userRepository.findById(id).orElseThrow(() ->
+                new ObjectNotFoundException("User not found"));
+        fillUser(updatedUser, userDto);
+        return UserMapper.toUserDto(userRepository.save(updatedUser));
     }
 
     @Override
@@ -42,7 +39,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserById(long id) {
         User user = userRepository.findById(id).orElseThrow(() ->
-                new NotFoundException("NFE"));
+                new ObjectNotFoundException("User not found"));
         return UserMapper.toUserDto(user);
     }
 

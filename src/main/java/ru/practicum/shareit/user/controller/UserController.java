@@ -1,45 +1,43 @@
 package ru.practicum.shareit.user.controller;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.booking.dto.Create;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**
  * TODO Sprint add-controllers.
  */
-@Slf4j
+
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(path = "/users")
 public class UserController {
+
     private final UserService userService;
 
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
     @PostMapping
-    public UserDto createUser(@Valid @RequestBody UserDto userDto) {
+    public UserDto createUser(@Validated({Create.class}) @RequestBody UserDto userDto) {
         return userService.createUser(userDto);
     }
 
-    @PatchMapping("/{userId}")
-    public UserDto updateUser(@PathVariable("userId") Long userId, @RequestBody UserDto userDto) {
+    @PatchMapping("/{user_id}")
+    public UserDto updateUser(@PathVariable("user_id") Long userId,
+                              @RequestBody UserDto userDto) {
         return userService.updateUser(userId, userDto);
     }
 
-    @GetMapping("/{userId}")
-    public UserDto getUserById(@PathVariable("userId") Long userId) {
+    @GetMapping("/{user_id}")
+    public UserDto getUserById(@PathVariable("user_id") Long userId) {
         return userService.getUserById(userId);
     }
 
-    @DeleteMapping("/{userId}")
-    public void deleteUserById(@PathVariable("userId") Long userId) {
+    @DeleteMapping("/{user_id}")
+    public void deleteUserById(@PathVariable("user_id") Long userId) {
         userService.deleteUser(userId);
     }
 

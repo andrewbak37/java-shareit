@@ -16,10 +16,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class BookingDto {
 
-private Long id;
+    private Long id;
 
-@NotNull(groups = {Create.class})
-private Long itemId;
+    @NotNull(groups = {Create.class})
+    private Long itemId;
 
     @FutureOrPresent(groups = {Create.class})
     @NotNull(groups = {Create.class})
