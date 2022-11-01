@@ -21,7 +21,7 @@ services:
       - db
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/shareit
-      - SPRING_DATASOURCE_USER=root
+      - SPRING_DATASOURCE_USER=postgres
       - SPRING_DATASOURCE_PASSWORD=root
       - POSTGRES_DB=shareit
 
@@ -35,4 +35,4 @@ services:
       - POSTGRES_PASSWORD=root
       - POSTGRES_DB=shareit
     volumes:
-      - .:/docker-entrypoint-initdb.d
+      - .:/docker-entrypoint-initdb.drypoint-initdb.d
